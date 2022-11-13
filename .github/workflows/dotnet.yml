@@ -1,0 +1,39 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 3.1
+    - name: Init Utilities
+      run: git submodule update --init
+    - name: Get Utilities
+      run: git submodule update --remote -f
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Publish
+      run: dotnet publish 'TestCoreMVC.csproj' -c Release --self-contained -r win-x64 --no-build
+    - name: Deploy
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        local-dir: LOCAL_DIR
+        server: ftp3.namesco.net
+        username: fa6a93-uat
+        password: Diwali@2022
+        dangerous-clean-slate: true
