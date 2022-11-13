@@ -32,7 +32,6 @@ jobs:
     - name: Deploy
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        local-dir: LOCAL_DIR
         server: ftp3.namesco.net
         username: fa6a93-uat
         password: Diwali@2022
